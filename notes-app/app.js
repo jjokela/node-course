@@ -1,27 +1,56 @@
-import validator from 'validator';
-// const validator = require('validator')
 import chalk from 'chalk';
-import {getNotes} from './notes.js'
-// getNotes = require('./notes')
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers'
 
-var result = getNotes();
-console.log(result);
+let command = process.argv[2]
 
-console.log(validator.isEmail('j.jokela@foo.com'));
+yargs(hideBin(process.argv))
+    .command({
+        command: 'add',
+        describe: 'Add command',
+        builder: {
+            title: {
+                describe: 'Note title',
+                demandOption: true,
+                type: 'string'
+            },
+            body: {
+                describe: 'Note body',
+                demandOption: true,
+                type: 'string'                
+            }
+        },
+        handler: function (argv) {
+            console.log(`Title: ${argv.title}, body: ${argv.body}`)
+        }
+    })
+    .command({
+        command: 'remove',
+        describe: 'Remove command',
+        handler: function () {
+            console.log('Removing a note')
+        }        
+    })
+    .command({
+        command: 'read',
+        describe: 'Read command',
+        handler: function () {
+            console.log('Reading a note')
+        }        
+    })
+    .command({
+        command: 'list',
+        describe: 'List command',
+        handler: function () {
+            console.log('Listing notes')
+        }        
+    })        
+    .parse()
 
-console.log(chalk.green('Hello There!!'));
+// console.log(yargs(hideBin(process.argv)).parse())
 
-// add = require('./utils')
-
-// console.log(name)
-
-// result = add(1, 2)
-// console.log(result)
-
-
-// const fs = require('fs')
-
-
-// fs.writeFileSync('notes.txt', 'This file was created by NodeJS!')
-
-// fs.appendFileSync('notes.txt', 'Raippatirallaa!')
+if (command == 'add') {
+    console.log('Adding note!')
+} else if (command == 'remove') {
+    console.log('Removing note!')
+}
