@@ -1,15 +1,20 @@
 import fs from 'fs'
 import chalk from 'chalk'
 
-function getNotes() {
-    return loadNotes()
+function getNotes() {       
+    let notes = loadNotes()
+
+    console.log(chalk.white.inverse(`Your notes`))
+
+    notes.forEach((note) => {
+        console.log(chalk.green.inverse(`Title: ${note.title}`))
+        console.log(chalk.blue.inverse(`Body: ${note.body}`))
+    })
 }
 
 function removeNote(title) {
     let notes = loadNotes()
-    let notesToKeep = notes.filter(function (note) {
-        return note.title !== title
-    })
+    let notesToKeep = notes.filter((note) => note.title !== title)
 
     if (notes.length > notesToKeep.length) {
         saveNotes(notesToKeep)
@@ -22,9 +27,7 @@ function removeNote(title) {
 function addNote(title, body) {
     let notes = loadNotes()
 
-    let duplicateNotes = notes.filter(function (note) {
-        return note.title === title
-    })
+    let duplicateNotes = notes.filter((note) => note.title === title)
 
     if (duplicateNotes.length === 0) {
         notes.push({
@@ -52,4 +55,16 @@ function loadNotes() {
     }
 }
 
-export { getNotes, addNote, removeNote };
+function readNote(title) {
+    let notes = loadNotes()
+    let note = notes.find((note) => note.title === title)
+
+    if(note) {
+        console.log(chalk.green.inverse(`Title: ${note.title}`))
+        console.log(chalk.blue.inverse(`Body: ${note.body}`))
+    } else {
+        console.log(chalk.green.red.inverse('Note not found!'))
+    }
+}
+
+export { readNote, getNotes, addNote, removeNote };
