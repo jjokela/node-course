@@ -1,5 +1,3 @@
-
-
 new Promise((resolve, reject) => setTimeout(() => resolve(1), 100))
     .then((result) => {
         console.log(result)

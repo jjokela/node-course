@@ -1,5 +1,3 @@
-
-
 function geocode(address, callback) {
     setTimeout(() => {
         const data = {
