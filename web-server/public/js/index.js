@@ -1,14 +1,7 @@
 console.log('Hello from index.js!')
 
-// fetch('http://localhost:3000/weather?address=den%20haag')
-//     .then((res) => {
-//         res.json().then((data) => {
-//             console.log(data)
-//         })
-//     })
-
 async function fetchData(location) {
-    let weatherResponse = await fetch(`http://localhost:3000/weather?address=${location}`)
+    let weatherResponse = await fetch(`/weather?address=${location}`)
     let responseJson = await weatherResponse.json()
 
     var res = document.getElementById("result");
