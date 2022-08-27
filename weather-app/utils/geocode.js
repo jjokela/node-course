@@ -6,4 +6,10 @@ function geocode(location) {
     return axios.get(mapBoxUrl, { responseType: 'json' })
 }
 
-export { geocode }
+async function geocodeAsync(location) {
+    const mapBoxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${process.env.MAPBOX_KEY}`
+
+    return await axios.get(mapBoxUrl, { responseType: 'json' })
+}
+
+export { geocode, geocodeAsync }
