@@ -22,6 +22,56 @@ app.post('/users', (req, res) => {
         })
 })
 
+app.get('/users', (req, res) => {
+    User.find({})
+        .then((users) => res.send(users))
+        .catch((err)=> {
+            res.status(400)
+            res.send(err)
+        })
+})
+
+app.get('/users/:id', (req, res) => {
+    const _id = req.params.id
+
+    User.findById(_id)
+        .then((user) => {
+            if(user) {
+                res.send(user)                
+            }
+            res.status(404).send()
+        })
+        .catch((err) => {
+            res.status(400)
+            res.send(err)
+        })
+})
+
+app.get('/tasks', (req, res) => {
+    Task.find({})
+        .then((users) => res.send(users))
+        .catch((err)=> {
+            res.status(400)
+            res.send(err)
+        })
+})
+
+app.get('/tasks/:id', (req, res) => {
+    const _id = req.params.id
+
+    Task.findById(_id)
+        .then((user) => {
+            if(user) {
+                res.send(user)                
+            }
+            res.status(404).send()
+        })
+        .catch((err) => {
+            res.status(400)
+            res.send(err)
+        })
+})
+
 app.post('/tasks', (req, res) => {
     const task = new Task(req.body)
     task.save()

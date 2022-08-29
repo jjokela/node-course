@@ -4,9 +4,11 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const url = `mongodb+srv://jjokela:${process.env.MONGO_PWD}@mongocluster.rchnsme.mongodb.net/test`
+const url = `mongodb+srv://dev-user:${process.env.MONGO_PWD}@mongocluster.rchnsme.mongodb.net/test`
 const client = new mongodb.MongoClient(url)
 const dbName = 'task-manager'
+
+console.log(url)
 
 async function connect() {
     await client.connect()
