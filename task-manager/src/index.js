@@ -2,6 +2,12 @@ import express from 'express'
 import './db/mongoose.js'
 import { userRouter } from './routes/user.js'
 import { taskRouter } from './routes/task.js'
+import dotenv from 'dotenv'
+import { connect } from './db/mongoose.js'
+
+dotenv.config()
+
+connect()
 
 const app = express()
 const port = process.env.PORT || 3000
