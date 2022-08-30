@@ -115,13 +115,13 @@ async function deleteTaskById(id) {
     })
 }
 
-deleteTaskById("630b2669bf02e1dbcce86add")
-    .then(console.log)
-    .catch(console.error)
-    .finally(() => {
-        client.close()
-        console.log('Client closed')
-    })
+// deleteTaskById("630b2669bf02e1dbcce86add")
+//     .then(console.log)
+//     .catch(console.error)
+//     .finally(() => {
+//         client.close()
+//         console.log('Client closed')
+//     })
 
 // createNewTask('new task', false)
 //     .then(console.log)
