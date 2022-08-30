@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const userSchema = mongoose.Schema({
     name: {
@@ -19,6 +20,7 @@ const userSchema = mongoose.Schema({
         required: true,
         trim: true,
         lowercase: true,
+        unique: true,
         validate(value) {
             if (!validator.isEmail(value)) {
                 throw new Error('Not a valid email address')
@@ -35,16 +37,45 @@ const userSchema = mongoose.Schema({
                 throw new Error("Password can't be 'password'")
             }
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
+
+userSchema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisismycourse')
+    return token
+}
+
+userSchema.statics.findByCredentials = async (email, password) => {
+    // first fing by email
+    const user = await User.findOne({ email })
+
+    if (!user) {
+        throw new Error('Unable to login!')
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+        throw new Error('Unable to login!')
+    }
+
+    return user
+}
 
 userSchema.pre('save', async function (next) {
     const user = this
 
-    if(user.isModified('password')) {
+    if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
-    
+
     next()
 })
 
