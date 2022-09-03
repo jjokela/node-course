@@ -34,8 +34,11 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
     try {
-        await user.save()
+        // automatically login user by storing the auth
         const token = await user.generateAuthToken()
+        user.tokens = user.tokens.concat({ token })
+        await user.save()
+
         res.status(201).send({ user, token })
     } catch (err) {
         res.status(400).send(err)
