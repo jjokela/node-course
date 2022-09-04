@@ -1,8 +1,32 @@
 import express from 'express'
 import { User } from '../models/user.js'
 import { auth } from '../middleware/auth.js'
+import multer from 'multer'
+import { sendWelcomeEmail } from '../emails/account.js'
+
 
 const router = new express.Router()
+
+const upload = multer({
+    limits: {
+        fileSize: 1024000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpge|png)$/)) {
+            return cb(new Error('Please upload a jpg, jpeg or png file'))
+        }
+
+        cb(undefined, true)
+    }
+})
+
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer
+    await req.user.save()
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
 
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
@@ -14,7 +38,7 @@ router.post('/users/logout', auth, async (req, res) => {
             return token.token !== req.token
         })
         await req.user.save()
-        res.send()        
+        res.send()
     } catch (err) {
         res.status(500).send()
     }
@@ -39,9 +63,11 @@ router.post('/users', async (req, res) => {
         user.tokens = user.tokens.concat({ token })
         await user.save()
 
+        sendWelcomeEmail(user.email, user.name)
+
         res.status(201).send({ user, token })
     } catch (err) {
-        res.status(400).send(err)
+        res.status(400).send({error: err.message})
     }
 })
 
